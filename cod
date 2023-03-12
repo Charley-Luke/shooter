@@ -1,3 +1,4 @@
+
 import pygame
 import sys
 from random import randint
@@ -8,23 +9,24 @@ screen_height = 500
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Shooter")
 
-fighter_image = pygame.image.load("images/fighter.png")
+fighter_image = pygame.image.load("fighter.png")
 fighter_width, fighter_height = fighter_image.get_size()
 fighter_x, fighter_y = screen_width/2 - fighter_width/2, screen_height - fighter_height
 FIGHTER_STEP = 1
 fighter_flag_l, fighter_flag_r = False, False
 
-rocket_image = pygame.image.load("images/rocket.png")
+rocket_image = pygame.image.load("rocket.png")
 rocket_width, rocket_height = rocket_image.get_size()
 rocket_x, rocket_y = fighter_x + fighter_width/2 - rocket_width/2, screen_height - fighter_height - 20
 rocket_flag = False
 ROCKET_STEP = 1
 
-alien_image = pygame.image.load("images/alien.png")
+alien_image = pygame.image.load("alien.png")
 alien_width, alien_height = alien_image.get_size()
 alien_x, alien_y = randint(0, screen_width-alien_width), 0
 alien_flag = False
 ALIEN_STEP = 0.2
+
 GameIsRun = True
 
 while GameIsRun:
@@ -64,13 +66,20 @@ while GameIsRun:
     screen.blit(alien_image, (alien_x, alien_y))
 
     if alien_y + alien_height >= screen_height - fighter_height:
-        game_font = pygame.font.Font(None,40)
-        text = game_font.render("Ты сдох(",True,'white','black')
+        screen.fill((250, 50, 50))
+        game_font = pygame.font.Font(None,80)
+        text = game_font.render("Помер",True,'black')
         text_rect = text.get_rect()
         text_rect.center = screen_width/2 , screen_height/2
         screen.blit(text, text_rect)
-        GameIsRun = False
+
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_F1:
+            text = 0
+            screen.fill((40, 10, 50))
+            alien_x, alien_y = randint(0, screen_width - alien_width), 0
+            screen.blit(fighter_image, (fighter_x, fighter_y))
+
 
 
     pygame.display.update()
-
