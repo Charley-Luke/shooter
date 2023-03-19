@@ -1,4 +1,3 @@
-
 import pygame
 import sys
 from random import randint
@@ -12,7 +11,7 @@ pygame.display.set_caption("Shooter")
 fighter_image = pygame.image.load("fighter.png")
 fighter_width, fighter_height = fighter_image.get_size()
 fighter_x, fighter_y = screen_width/2 - fighter_width/2, screen_height - fighter_height
-FIGHTER_STEP = 1
+FIGHTER_STEP = 0.5
 fighter_flag_l, fighter_flag_r = False, False
 
 rocket_image = pygame.image.load("rocket.png")
@@ -24,12 +23,17 @@ ROCKET_STEP = 1
 alien_image = pygame.image.load("alien.png")
 alien_width, alien_height = alien_image.get_size()
 alien_x, alien_y = randint(0, screen_width-alien_width), 0
-alien_flag = False
-ALIEN_STEP = 0.2
+alien_flag = True
+ALIEN_STEP = 0.1
+
+ochki = 0
 
 GameIsRun = True
 
 while GameIsRun:
+
+
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
@@ -55,7 +59,6 @@ while GameIsRun:
 
     alien_y += ALIEN_STEP
 
-
     screen.fill((40, 10, 50))
     screen.blit(fighter_image, (fighter_x, fighter_y))
 
@@ -63,9 +66,20 @@ while GameIsRun:
         screen.blit(rocket_image, (rocket_x, rocket_y))
         rocket_y -= ROCKET_STEP
 
-    screen.blit(alien_image, (alien_x, alien_y))
+    if alien_flag:
+        screen.blit(alien_image, (alien_x, alien_y))
 
-    if alien_y + alien_height >= screen_height - fighter_height:
+    if rocket_flag and rocket_x > alien_x and rocket_x < alien_x + alien_width - rocket_width and rocket_y > alien_y and rocket_y < alien_y + alien_height - rocket_height:
+        alien_flag = False
+        alien_x, alien_y = randint(0, screen_width - alien_width), 0
+        alien_flag = True
+        ochki += 1
+
+    game_font = pygame.font.Font(None, 30)
+    schet = game_font.render(f"Счет: {ochki}", True, 'white')
+    screen.blit(schet, (20, 30))
+
+    if alien_y + alien_height >= screen_height - fighter_height and alien_flag:
         screen.fill((250, 50, 50))
         game_font = pygame.font.Font(None,80)
         text = game_font.render("Помер",True,'black')
@@ -79,7 +93,5 @@ while GameIsRun:
             screen.fill((40, 10, 50))
             alien_x, alien_y = randint(0, screen_width - alien_width), 0
             screen.blit(fighter_image, (fighter_x, fighter_y))
-
-
 
     pygame.display.update()
